@@ -1,0 +1,9 @@
+/.dapper
+/.cache
+/bin
+/dist
+*.swp
+.idea
+/helm-locker
+.vscode/
+.DS_Store
