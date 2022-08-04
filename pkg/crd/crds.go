@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	v1alpha1 "github.com/rancher/helm-locker/pkg/apis/helm.cattle.io/v1alpha1"
+	v1 "github.com/pennyscissors/plugin-operator/pkg/apis/catalog.cattle.io/v1"
 	"github.com/rancher/wrangler/pkg/crd"
 	"github.com/rancher/wrangler/pkg/yaml"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -66,10 +66,9 @@ func Objects(v1beta1 bool) (result []runtime.Object, err error) {
 // List returns the set of CRDs that need to be generated
 func List() []crd.CRD {
 	return []crd.CRD{
-		newCRD(&v1alpha1.HelmRelease{}, func(c crd.CRD) crd.CRD {
+		newCRD(&v1.UIPlugin{}, func(c crd.CRD) crd.CRD {
 			return c.
-				WithColumn("Release Name", ".spec.release.name").
-				WithColumn("Release Namespace", ".spec.release.namespace").
+				WithColumn("Plugin Name", ".spec.release.name").
 				WithColumn("Version", ".status.version").
 				WithColumn("State", ".status.state")
 		}),
@@ -91,8 +90,8 @@ func Create(ctx context.Context, cfg *rest.Config) error {
 func newCRD(obj interface{}, customize func(crd.CRD) crd.CRD) crd.CRD {
 	crd := crd.CRD{
 		GVK: schema.GroupVersionKind{
-			Group:   "helm.cattle.io",
-			Version: "v1alpha1",
+			Group:   "catalog.cattle.io",
+			Version: "v1",
 		},
 		Status:       true,
 		SchemaObject: obj,

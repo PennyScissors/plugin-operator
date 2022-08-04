@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	v1alpha1 "github.com/rancher/helm-locker/pkg/apis/helm.cattle.io/v1alpha1"
-	"github.com/rancher/helm-locker/pkg/crd"
+	v1 "github.com/pennyscissors/plugin-operator/pkg/apis/catalog.cattle.io/v1"
+	"github.com/pennyscissors/plugin-operator/pkg/crd"
 	"github.com/sirupsen/logrus"
 
 	controllergen "github.com/rancher/wrangler/pkg/controller-gen"
@@ -25,12 +25,12 @@ func main() {
 
 	os.Unsetenv("GOPATH")
 	controllergen.Run(args.Options{
-		OutputPackage: "github.com/rancher/helm-locker/pkg/generated",
+		OutputPackage: "github.com/pennyscissors/plugin-operator/pkg/generated",
 		Boilerplate:   "scripts/boilerplate.go.txt",
 		Groups: map[string]args.Group{
-			"helm.cattle.io": {
+			"catalog.cattle.io": {
 				Types: []interface{}{
-					v1alpha1.HelmRelease{},
+					v1.UIPlugin{},
 				},
 				GenerateTypes: true,
 			},
