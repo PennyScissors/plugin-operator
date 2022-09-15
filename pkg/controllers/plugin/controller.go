@@ -9,8 +9,7 @@ import (
 )
 
 const (
-	UIPluginNamesapce = "cattle-ui-plugin-system"
-	FilesTxtFilename  = "files.txt"
+	FilesTxtFilename = "files.txt"
 )
 
 func Register(
@@ -37,7 +36,7 @@ type handler struct {
 }
 
 func (h *handler) OnPluginChange(key string, plugin *v1.UIPlugin) (*v1.UIPlugin, error) {
-	err := Index.Generate(h.pluginCache)
+	err := Index.Generate(h.systemNamespace, h.pluginCache)
 	if err != nil {
 		return plugin, err
 	}
@@ -51,7 +50,7 @@ func (h *handler) OnPluginChange(key string, plugin *v1.UIPlugin) (*v1.UIPlugin,
 	} else {
 		plugin.Status.CacheState = Pending
 	}
-	err = FsCache.Sync(h.pluginCache)
+	err = FsCache.Sync(h.systemNamespace, h.pluginCache)
 	if err != nil {
 		return plugin, err
 	}

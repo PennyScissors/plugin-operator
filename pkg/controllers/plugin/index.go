@@ -27,11 +27,11 @@ type Entry struct {
 	Generated time.Time
 }
 
-func (s *SafeIndex) Generate(cache plugincontroller.UIPluginCache) error {
+func (s *SafeIndex) Generate(namespace string, cache plugincontroller.UIPluginCache) error {
 	logrus.Debug("generating index from plugin controller's cache")
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	cachedPlugins, err := cache.List(UIPluginNamesapce, labels.Everything())
+	cachedPlugins, err := cache.List(namespace, labels.Everything())
 	if err != nil {
 		logrus.Error(err.Error())
 		return err

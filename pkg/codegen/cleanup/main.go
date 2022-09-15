@@ -14,7 +14,7 @@ func main() {
 	if err := os.RemoveAll("./pkg/generated"); err != nil {
 		logrus.Fatal(err)
 	}
-	if err := os.RemoveAll("./crds"); err != nil {
+	if err := os.RemoveAll("./charts/ui-plugin-operator/crds"); err != nil {
 		logrus.Fatal(err)
 	}
 }

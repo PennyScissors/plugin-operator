@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	FSCacheRootDir = "plugincache"
+	FSCacheRootDir = "/home/pluginoperator/plugincache"
 
 	// Cache states used by custom resources
 	Cached   = "cached"
@@ -29,9 +29,9 @@ var (
 
 type FSCache struct{}
 
-func (c *FSCache) Sync(cache plugincontroller.UIPluginCache) error {
+func (c *FSCache) Sync(namespace string, cache plugincontroller.UIPluginCache) error {
 	// Sync filesystem cache with plugins in the plugin controller's cache
-	cachedPlugins, err := cache.List(UIPluginNamesapce, labels.Everything())
+	cachedPlugins, err := cache.List(namespace, labels.Everything())
 	if err != nil {
 		return err
 	}
