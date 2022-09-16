@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	FSCacheRootDir = "/home/pluginoperator/plugincache"
+	FSCacheRootDir = "./home/pluginoperator/plugincache"
 
 	// Cache states used by custom resources
 	Cached   = "cached"
@@ -78,9 +78,15 @@ func (c *FSCache) Save(name, version string) error {
 }
 
 func (c *FSCache) isCached(name, version string) (bool, error) {
-	_, err := os.Stat(filepath.Join(FSCacheRootDir, name, version))
+	path := filepath.Join(FSCacheRootDir, name, version)
+	_, err := os.Stat(path)
 	if !errors.Is(err, os.ErrNotExist) {
-		return true, nil
+		isEmpty, err := isDirEmpty(path)
+		if err != nil {
+			return false, err
+		} else if !isEmpty {
+			return true, nil
+		}
 	} else if errors.Is(err, os.ErrNotExist) {
 		return false, nil
 	} else if err != nil {
@@ -88,6 +94,20 @@ func (c *FSCache) isCached(name, version string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func isDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+	_, err = f.Readdirnames(1)
+	if err == io.EOF {
+		return true, nil
+	}
+
+	return false, err
 }
 
 // Might need this later if we decide to clear the cache on exit?
@@ -125,9 +145,12 @@ func fetchFile(endpoint, name, version, file string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	filepath := filepath.Join(FSCacheRootDir, name, version, file)
+	path := filepath.Join(FSCacheRootDir, name, version, file)
 	logrus.Debugf("creating file [%s]", url)
-	out, err := os.Create(filepath)
+	if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
+		return err
+	}
+	out, err := os.Create(path)
 	if err != nil {
 		logrus.Error(err)
 		return err

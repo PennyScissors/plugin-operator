@@ -51,6 +51,9 @@ func (s *SafeIndex) Generate(namespace string, cache plugincontroller.UIPluginCa
 
 func (s *SafeIndex) SyncWithFsCache() error {
 	files, err := filepath.Glob(FSCacheRootDir + "/*/*")
+	// relpath, _ := filepath.Rel(FSCacheRootDir, files[0])
+	logrus.Debugf("glob results: %+v\n", files)
+	// logrus.Debugf("glob path: %+v\n", relpath)
 	if err != nil {
 		logrus.Error(err.Error())
 		return err
@@ -60,9 +63,10 @@ func (s *SafeIndex) SyncWithFsCache() error {
 		// Entries in the filesystem cache that aren't in the index will be deleted
 		logrus.Debugf("syncing index with filesystem cache")
 		// splits /root/pluginName/pluginVersion/* from a fs cache path
-		s := strings.Split(file, "/")
-		name := s[1]
-		version := s[2]
+		relpath, _ := filepath.Rel(FSCacheRootDir, file)
+		s := strings.Split(relpath, "/")
+		name := s[0]
+		version := s[1]
 		_, ok := Index.Entries[name]
 		if ok && Index.Entries[name].Version == version {
 			continue
