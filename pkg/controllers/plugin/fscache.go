@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	FSCacheRootDir = "./home/pluginoperator/plugincache"
+	FSCacheRootDir = "/home/pluginoperator/plugincache"
 
 	// Cache states used by custom resources
 	Cached   = "cached"
