@@ -7,7 +7,6 @@ replicaCount: 1
 image:
   repository: scresporancher/plugin-operator
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
   tag: "0.0.1"
 
 imagePullSecrets: []
@@ -16,32 +15,28 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 80
   targetPort: 8080
 
-pluginServer:
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
 
-  replicas: 1
+replicas: 1
 
-  resources: {}
+resources: {}
 
-  # Temporary, looks like user (0) is bad practice, but user (1000) throws a perms issue at the moment
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    # runAsUser: 0
-    # runAsGroup: 0
+securityContext: {}
 
-  nodeSelector: {}
+nodeSelector: {}
 
-  tolerations: []
+tolerations: []
 
-  affinity: {}
+affinity: {}
+
+podAnnotations: []
 
 global:
   cattle:

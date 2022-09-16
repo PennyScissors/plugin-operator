@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    {{- include "plugin-server.labels" . | nindent 4 }}
+    {{- include "plugin-operator.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "plugin-server.selectorLabels" . | nindent 4 }}
+    {{- include "plugin-operator.selectorLabels" . | nindent 4 }}
