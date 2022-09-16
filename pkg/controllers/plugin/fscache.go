@@ -68,7 +68,7 @@ func (c *FSCache) Sync(namespace string, cache plugincontroller.UIPluginCache) e
 }
 
 func (c *FSCache) Save(name, version string) error {
-	err := os.MkdirAll(filepath.Join(FSCacheRootDir, name, version, "plugin"), os.ModePerm)
+	err := os.MkdirAll(filepath.Join(FSCacheRootDir, name, version), os.ModePerm)
 	if err != nil {
 		logrus.Debugf("failed to cache plugin [Name: %s Version: %s] in filesystem", name, version)
 		return err
@@ -78,7 +78,7 @@ func (c *FSCache) Save(name, version string) error {
 }
 
 func (c *FSCache) isCached(name, version string) (bool, error) {
-	_, err := os.Stat(filepath.Join(FSCacheRootDir, name, version, "plugin"))
+	_, err := os.Stat(filepath.Join(FSCacheRootDir, name, version))
 	if !errors.Is(err, os.ErrNotExist) {
 		return true, nil
 	} else if errors.Is(err, os.ErrNotExist) {

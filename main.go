@@ -37,6 +37,7 @@ type PluginOperator struct {
 }
 
 func (a *PluginOperator) Run(cmd *cobra.Command, args []string) error {
+	logrus.SetLevel(logrus.DebugLevel)
 	if len(a.Namespace) == 0 {
 		return fmt.Errorf("helm-locker can only be started in a single namespace")
 	}
