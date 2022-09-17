@@ -61,7 +61,8 @@ func (a *PluginOperator) Run(cmd *cobra.Command, args []string) error {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/index.yaml", indexHandler)
-	r.HandleFunc("/{name}/{version}{rest:.*}", pluginHandler)
+	r.HandleFunc("/{name}/{version}/{rest:.*}", pluginHandler)
+	// r.HandleFunc("/{name}/{version}{rest:.*}", pluginHandler)
 	http.Handle("/", r)
 
 	go func() {
@@ -105,24 +106,24 @@ func pluginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if entry.NoCache {
 		logrus.Debugf("[noCache: %v] proxying request to [endpoint: %v]\n", entry.NoCache, entry.Endpoint)
-		proxyRequest(entry.Endpoint, w, r)
+		proxyRequest(entry.Endpoint, vars["rest"], w, r)
 	} else {
 		logrus.Debugf("[noCache: %v] serving plugin files from filesystem cache\n", entry.NoCache)
 		http.FileServer(http.Dir(plugin.FSCacheRootDir)).ServeHTTP(w, r)
 	}
 }
 
-func proxyRequest(target string, w http.ResponseWriter, r *http.Request) {
-	if denylist(target) {
-		msg := fmt.Sprintf("url [%s] is forbidden", target)
-		http.Error(w, msg, http.StatusForbidden)
-		return
-	}
+func proxyRequest(target, path string, w http.ResponseWriter, r *http.Request) {
+	// if denylist(target) {
+	// 	msg := fmt.Sprintf("url [%s] is forbidden", target)
+	// 	http.Error(w, msg, http.StatusForbidden)
+	// 	return
+	// }
 	url, _ := url.Parse(target)
 	proxy := httputil.NewSingleHostReverseProxy(url)
 	r.URL.Host = url.Host
 	r.URL.Scheme = url.Scheme
-	r.URL.Path = url.Path
+	r.URL.Path = path
 	r.Header.Set("X-Forwarded-Host", r.Header.Get("Host"))
 	r.Host = url.Host
 	proxy.ServeHTTP(w, r)
