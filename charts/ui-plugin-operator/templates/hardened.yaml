@@ -1,3 +1,4 @@
+# temporarily disable hardened to fix issue with networking (throws unknown authority certificate errors)
 {{- if false }}
 {{- $namespaces := dict "_0" .Release.Namespace -}}
 apiVersion: batch/v1
