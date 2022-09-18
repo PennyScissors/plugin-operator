@@ -43,6 +43,11 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          args:
+{{- if .Values.debug }}
+          - --debug
+          - --debug-level={{ .Values.debugLevel }}
+{{- end }}
           # livenessProbe:
           #   httpGet:
           #     path: /

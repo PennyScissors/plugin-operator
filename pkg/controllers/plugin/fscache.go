@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	FSCacheRootDir = "/home/pluginoperator/plugincache"
+	FSCacheRootDir = "/home/uipluginoperator/cache"
 
 	// Cache states used by custom resources
 	Cached   = "cached"
@@ -30,7 +30,6 @@ var (
 type FSCache struct{}
 
 func (c *FSCache) Sync(namespace string, cache plugincontroller.UIPluginCache) error {
-	// Sync filesystem cache with plugins in the plugin controller's cache
 	cachedPlugins, err := cache.List(namespace, labels.Everything())
 	if err != nil {
 		return err
@@ -96,29 +95,6 @@ func (c *FSCache) isCached(name, version string) (bool, error) {
 	return false, nil
 }
 
-func isDirEmpty(path string) (bool, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return false, err
-	}
-	defer f.Close()
-	_, err = f.Readdirnames(1)
-	if err == io.EOF {
-		return true, nil
-	}
-
-	return false, err
-}
-
-// Might need this later if we decide to clear the cache on exit?
-// func (c *FSCache) Clear() {
-// 	if _, err := os.Stat(FSCacheRootDir); err == nil {
-// 		os.RemoveAll(FSCacheRootDir)
-// 	} else {
-// 		logrus.Error(err)
-// 	}
-// }
-
 func getPluginFiles(urlFilesTxt string) ([]string, error) {
 	var files []string
 	logrus.Debugf("fetching file [%s]", urlFilesTxt)
@@ -159,4 +135,18 @@ func fetchFile(endpoint, name, version, file string) error {
 	io.Copy(out, resp.Body)
 
 	return nil
+}
+
+func isDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+	_, err = f.Readdirnames(1)
+	if err == io.EOF {
+		return true, nil
+	}
+
+	return false, err
 }

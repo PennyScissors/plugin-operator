@@ -58,3 +58,6 @@ global:
 
     # pspEnabled: true
     # pspAnnotations: {}
+
+debug: true
+debugLevel: 5

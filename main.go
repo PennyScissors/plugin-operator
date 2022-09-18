@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	_ "net/http/pprof"
-	"net/url"
 	neturl "net/url"
 	"strings"
 
@@ -37,7 +36,9 @@ type PluginOperator struct {
 }
 
 func (a *PluginOperator) Run(cmd *cobra.Command, args []string) error {
+	// temp: delete this line
 	logrus.SetLevel(logrus.DebugLevel)
+
 	if len(a.Namespace) == 0 {
 		return fmt.Errorf("helm-locker can only be started in a single namespace")
 	}
@@ -62,7 +63,6 @@ func (a *PluginOperator) Run(cmd *cobra.Command, args []string) error {
 	r := mux.NewRouter()
 	r.HandleFunc("/index.yaml", indexHandler)
 	r.HandleFunc("/{name}/{version}/{rest:.*}", pluginHandler)
-	// r.HandleFunc("/{name}/{version}{rest:.*}", pluginHandler)
 	http.Handle("/", r)
 
 	go func() {
@@ -114,12 +114,15 @@ func pluginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func proxyRequest(target, path string, w http.ResponseWriter, r *http.Request) {
-	// if denylist(target) {
-	// 	msg := fmt.Sprintf("url [%s] is forbidden", target)
-	// 	http.Error(w, msg, http.StatusForbidden)
-	// 	return
-	// }
-	url, _ := url.Parse(target)
+	url, err := neturl.Parse(target)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse url [%s]", target), http.StatusInternalServerError)
+		return
+	}
+	if denylist(url) {
+		http.Error(w, fmt.Sprintf("url [%s] is forbidden", target), http.StatusForbidden)
+		return
+	}
 	proxy := httputil.NewSingleHostReverseProxy(url)
 	r.URL.Host = url.Host
 	r.URL.Scheme = url.Scheme
@@ -129,7 +132,7 @@ func proxyRequest(target, path string, w http.ResponseWriter, r *http.Request) {
 	proxy.ServeHTTP(w, r)
 }
 
-func denylist(url string) bool {
+func denylist(url *neturl.URL) bool {
 	// is there a way to check if an IP equivalent to localhost is being used?
 	denied := map[string]struct{}{
 		"localhost": {},
@@ -137,9 +140,11 @@ func denylist(url string) bool {
 		"0.0.0.0":   {},
 		"":          {},
 	}
-	u, _ := neturl.Parse(url)
-	host := strings.Split(u.Host, ":")[0]
+	host := strings.Split(url.Host, ":")[0]
 	_, isDenied := denied[host]
 
-	return isDenied
+	// temp: uncomment after testing
+	// return isDenied
+	_ = isDenied
+	return false
 }

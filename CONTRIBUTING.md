@@ -1,4 +1,4 @@
-# Contributing to rancher/helm-locker
+# Contributing to rancher/ui-plugin-operator
 
 Thank you for investing your time in contributing to our project!
 
@@ -20,11 +20,11 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 #### Create a new issue
 
-If you spot a problem with the docs, [search if an issue already exists](https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments). If a related issue doesn't exist, you can open a new [issue](https://github.com/rancher/helm-locker/issues/new). 
+If you spot a problem with the docs, [search if an issue already exists](https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments). If a related issue doesn't exist, you can open a new [issue](https://github.com/rancher/ui-plugin-operator/issues/new).
 
 #### Solve an issue
 
-Scan through our [existing issues](https://github.com/rancher/helm-locker/issues) to find one that interests you. If you find an issue to work on, you are welcome to open a PR with a fix.
+Scan through our [existing issues](https://github.com/rancher/ui-plugin-operator/issues) to find one that interests you. If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Make Changes
 
@@ -62,4 +62,4 @@ Once you submit your PR, a Rancher team member will review your proposal. We may
 
 Congratulations :tada::tada: The Rancher team thanks you :sparkles:. 
 
-Once your PR is merged, your contributions will be publicly visible on the [`rancher/helm-locker`](https://github.com/rancher/helm-locker).
+Once your PR is merged, your contributions will be publicly visible on the [`rancher/ui-plugin-operator`](https://github.com/rancher/ui-plugin-operator).

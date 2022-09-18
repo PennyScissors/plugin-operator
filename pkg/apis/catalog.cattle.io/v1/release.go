@@ -29,29 +29,5 @@ type UIPluginEntry struct {
 }
 
 type UIPluginStatus struct {
-	// generated timestamp
-	// UI can show to user to figure out why something might be broken
-	// cacheState enum cached, disabled, pending
-	// generated
-
-	// Generated time.Time `json:"generated,omitempty"`
 	CacheState string `json:"cacheState,omitempty"`
 }
-
-// apiVersion: catalog.cattle.io/v1
-// kind: UIPlugin
-// metadata:
-//   name: epinio
-//   namespace: cattle-ui-plugin-system
-// spec:
-//   plugin: # should initially follow the design of the Helm Chart.yaml fields, could discuss modifying this
-//     name: epinio
-//     version: 0.0.1
-//     description: A UI Plugin for the Epinio chart
-//     icon: https://mywebsite.com/icon.svg # not recommended since this won't work for airgapped setups? This icon will be pulled in and stored in memory on loading a UIPlugin for serving the contents
-//     annotations:
-//       catalog.cattle.io/certified: rancher
-//       catalog.cattle.io/display-name: Epinio
-//     endpoint: something.namespace.svc
-// status:
-//   # TBD; depends on developer discussions with UI for what needs to be shown
